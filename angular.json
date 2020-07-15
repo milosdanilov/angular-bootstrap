@@ -7,7 +7,7 @@
       "projectType": "library",
       "root": "projects/angular-bootstrap",
       "sourceRoot": "projects/angular-bootstrap/src",
-      "prefix": "ng",
+      "prefix": "bs",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
