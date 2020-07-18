@@ -19,4 +19,4 @@ export const containerTypeToClassMap = (type: ContainerType): ContainerClass => 
   xl: 'container-xl',
   xxl: 'container-xxl',
   fluid: 'container-fluid'
-}))[type];
+}))()[type];
