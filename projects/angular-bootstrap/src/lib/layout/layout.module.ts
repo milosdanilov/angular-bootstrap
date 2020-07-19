@@ -2,16 +2,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ContainerDirective } from './container';
-import { RowDirective } from './grid';
+import { RowDirective, ColDirective } from './grid';
 
 @NgModule({
   declarations: [
     ContainerDirective,
-    RowDirective
+    RowDirective,
+    ColDirective
   ],
   exports: [
     ContainerDirective,
-    RowDirective
+    RowDirective,
+    ColDirective
   ],
   imports: [
     CommonModule
