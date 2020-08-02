@@ -36,26 +36,23 @@ export class ColDirective implements OnChanges {
   constructor () {}
 
   ngOnChanges (changes: SimpleChanges) {
-    this._elementClass = [];
 
-    if (changes['size']) {
-      this._elementClass.push(`col-${changes['size'].currentValue}`);
+    if (this.changeIsSize(changes)) {
+      const sizes = [
+        this.size && `col-${this.size}`,
+        this.sizeSm && `col-sm-${this.sizeSm}`,
+        this.sizeMd && `col-md-${this.sizeMd}`,
+        this.sizeLg && `col-lg-${this.sizeLg}`,
+        this.sizeXl && `col-xl-${this.sizeXl}`,
+        this.sizeXxl && `col-xxl-${this.sizeXxl}`
+      ];
+
+      this._elementClass = [...sizes];
     }
-    if (changes['sizeSm']) {
-      this._elementClass.push(`col-sm-${changes['sizeSm'].currentValue}`);
-    }
-    if (changes['sizeMd']) {
-      this._elementClass.push(`col-md-${changes['sizeMd'].currentValue}`);
-    }
-    if (changes['sizeLg']) {
-      this._elementClass.push(`col-lg-${changes['sizeLg'].currentValue}`);
-    }
-    if (changes['sizeXl']) {
-      this._elementClass.push(`col-xl-${changes['sizeXl'].currentValue}`);
-    }
-    if (changes['sizeXxl']) {
-      this._elementClass.push(`col-xxl-${changes['sizeXxl'].currentValue}`);
-    }
+  }
+
+  private changeIsSize(changes: SimpleChanges): boolean {
+    return ['size', 'sizeSm', 'sizeMd', 'sizeLg', 'sizeXl', 'sizeXxl'].some(x => changes.hasOwnProperty(x));
   }
 
 }
