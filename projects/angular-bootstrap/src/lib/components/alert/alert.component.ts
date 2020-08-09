@@ -1,27 +1,48 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+  OnChanges,
+  SimpleChanges,
+  Renderer2,
+  ElementRef
+} from '@angular/core';
 
 import { AlertColors } from './alert';
 
 @Component({
   selector: 'bs-alert',
   templateUrl: './alert.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    ':host { display: block }'
+  ],
+  host: {
+    'class': 'alert',
+    'role': 'alert',
+  }
 })
 export class AlertComponent implements OnInit, OnChanges {
 
   @Input()
   color: AlertColors;
 
-  colorClass: string;
-
-  constructor() { }
+  constructor(
+    private renderer: Renderer2,
+    private elementRef: ElementRef
+  ) { }
 
   ngOnInit(): void {
+    this.renderer.addClass(this.elementRef.nativeElement, `alert-${this.color}`)
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['color']) {
-      this.colorClass = `alert-${this.color}`;
+    const colorChange = changes['color'];
+
+    if (colorChange && !colorChange.isFirstChange()) {
+      this.renderer.removeClass(this.elementRef.nativeElement, `alert-${colorChange.previousValue}`);
+      this.renderer.addClass(this.elementRef.nativeElement, `alert-${colorChange.currentValue}`);
     }
   }
 
