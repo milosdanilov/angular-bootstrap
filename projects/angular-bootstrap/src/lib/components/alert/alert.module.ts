@@ -2,18 +2,25 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AlertComponent } from './alert.component';
-import { AlertLinkDirective, AlertHeadingDirective } from './alert.directive';
+
+import {
+  AlertLinkDirective,
+  AlertHeadingDirective,
+  AlertDismissibleDirective
+} from './alert.directive';
 
 @NgModule({
   declarations: [
     AlertComponent,
     AlertLinkDirective,
-    AlertHeadingDirective
+    AlertHeadingDirective,
+    AlertDismissibleDirective
   ],
   exports: [
     AlertComponent,
     AlertLinkDirective,
-    AlertHeadingDirective
+    AlertHeadingDirective,
+    AlertDismissibleDirective
   ],
   imports: [
     CommonModule

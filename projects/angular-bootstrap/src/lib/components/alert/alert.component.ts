@@ -6,10 +6,13 @@ import {
   OnChanges,
   SimpleChanges,
   Renderer2,
-  ElementRef
+  ElementRef,
+  Optional,
+  Host
 } from '@angular/core';
 
 import { AlertColors } from './alert';
+import { AlertDismissibleDirective } from './alert.directive';
 
 @Component({
   selector: 'bs-alert',
@@ -28,10 +31,15 @@ export class AlertComponent implements OnInit, OnChanges {
   @Input()
   color: AlertColors;
 
+  _dismissible: boolean;
+
   constructor(
     private renderer: Renderer2,
-    private elementRef: ElementRef
-  ) { }
+    private elementRef: ElementRef,
+    @Optional() @Host() private dismissibleDirective: AlertDismissibleDirective,
+  ) {
+    this._dismissible = Boolean(dismissibleDirective);
+  }
 
   ngOnInit(): void {
     this.renderer.addClass(this.elementRef.nativeElement, `alert-${this.color}`)
@@ -44,6 +52,10 @@ export class AlertComponent implements OnInit, OnChanges {
       this.renderer.removeClass(this.elementRef.nativeElement, `alert-${colorChange.previousValue}`);
       this.renderer.addClass(this.elementRef.nativeElement, `alert-${colorChange.currentValue}`);
     }
+  }
+
+  onDismissBtnClick() {
+    this.dismissibleDirective.triggerDismiss();
   }
 
 }
