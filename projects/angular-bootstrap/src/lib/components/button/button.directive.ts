@@ -3,9 +3,9 @@ import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
 import { ButtonColor } from './button';
 
 @Directive({
-  selector: 'button[bsButton]',
+  selector: 'button[bsButton], input[bsButton]',
+  exportAs: 'bsButton',
   host: {
-    'type': 'button',
     'class': 'btn'
   }
 })
@@ -32,3 +32,12 @@ export class ButtonDirective {
   }
 
 }
+
+@Directive({
+  selector: 'a[bsButton]',
+  exportAs: 'bsButton',
+  host: {
+    'role': 'button'
+  }
+})
+export class AnchorButtonDirective extends ButtonDirective { }
