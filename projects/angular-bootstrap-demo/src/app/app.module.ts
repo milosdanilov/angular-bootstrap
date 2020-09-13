@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutModule } from 'projects/angular-bootstrap/src/lib/layout';
-import { AlertModule, BadgeModule } from 'projects/angular-bootstrap/src/lib/components';
+import { AlertModule, BadgeModule, ButtonModule } from 'projects/angular-bootstrap/src/lib/components';
 
 
 @NgModule({
@@ -17,6 +17,7 @@ import { AlertModule, BadgeModule } from 'projects/angular-bootstrap/src/lib/com
     LayoutModule,
     AlertModule,
     BadgeModule,
+    ButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
