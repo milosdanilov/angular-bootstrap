@@ -3,7 +3,7 @@ import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
 import { BehaviorSubject, combineLatest, ReplaySubject } from 'rxjs';
 import { map, pairwise, startWith, tap } from 'rxjs/operators';
 
-import { ButtonColor, ButtonColorAndFillTuple, ButtonFillType } from './button';
+import { ButtonColor, ButtonColorAndFillTuple, ButtonFillType, ButtonSize } from './button';
 
 @Directive({
   selector: 'button[bsButton], input[bsButton]',
@@ -16,6 +16,8 @@ export class ButtonDirective implements OnInit {
 
   private color$ = new ReplaySubject<ButtonColor>(1);
   private fill$ = new BehaviorSubject<ButtonFillType>('solid');
+
+  private _size: ButtonSize = 'default';
 
   constructor(
     private elementRef: ElementRef,
@@ -38,6 +40,11 @@ export class ButtonDirective implements OnInit {
     }
 
     this.fill$.next(value);
+  }
+
+  @Input()
+  set size(value: ButtonSize) {
+    this._setSize(value);
   }
 
   ngOnInit(): void {
@@ -75,6 +82,19 @@ export class ButtonDirective implements OnInit {
 
     const [color, fill] = colorAndFill;
     return ['btn', fill === 'outline' ? fill : '', color].filter(x => !!x).join('-');
+  }
+
+  private _setSize(size: ButtonSize) {
+
+    if (this._size && this._size !== 'default') {
+      this.renderer.removeClass(this.elementRef.nativeElement, `btn-${this._size}`);
+    }
+
+    if (size && size !== 'default') {
+      this.renderer.addClass(this.elementRef.nativeElement, `btn-${size}`);
+    }
+
+    this._size = size;
   }
 }
 

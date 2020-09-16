@@ -3,3 +3,5 @@ export type ButtonColor = 'primary' | 'secondary' | 'success' | 'danger' | 'warn
 export type ButtonFillType = 'solid' | 'outline';
 
 export type ButtonColorAndFillTuple = [ButtonColor, ButtonFillType];
+
+export type ButtonSize = 'sm' | 'lg' | 'default';
