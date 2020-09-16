@@ -1,6 +1,9 @@
-import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
 
-import { ButtonColor } from './button';
+import { BehaviorSubject, combineLatest, ReplaySubject } from 'rxjs';
+import { map, pairwise, startWith, tap } from 'rxjs/operators';
+
+import { ButtonColor, ButtonColorAndFillTuple, ButtonFillType } from './button';
 
 @Directive({
   selector: 'button[bsButton], input[bsButton]',
@@ -9,9 +12,10 @@ import { ButtonColor } from './button';
     'class': 'btn'
   }
 })
-export class ButtonDirective {
+export class ButtonDirective implements OnInit {
 
-  private _color: ButtonColor;
+  private color$ = new ReplaySubject<ButtonColor>(1);
+  private fill$ = new BehaviorSubject<ButtonFillType>('solid');
 
   constructor(
     private elementRef: ElementRef,
@@ -19,18 +23,59 @@ export class ButtonDirective {
   ) { }
 
   @Input()
-  set color(newColor: ButtonColor) {
-    if (this._color) {
-      this.renderer.removeClass(this.elementRef.nativeElement, `btn-${this._color}`);
+  set color(value: ButtonColor) {
+    if (!value) {
+      return;
     }
 
-    if (newColor) {
-      this.renderer.addClass(this.elementRef.nativeElement, `btn-${newColor}`);
-    }
-
-    this._color = newColor;
+    this.color$.next(value);
   }
 
+  @Input()
+  set fill(value: ButtonFillType) {
+    if (!value) {
+      return;
+    }
+
+    this.fill$.next(value);
+  }
+
+  ngOnInit(): void {
+    this.setupColorAndFill();
+  }
+
+  private setupColorAndFill() {
+
+    const removeColorAndFill = (colorAndFill: ButtonColorAndFillTuple) => {
+      const klass = this._createColorAndFillClass(colorAndFill);
+      this.renderer.removeClass(this.elementRef.nativeElement, klass);
+    }
+
+    const addColorAndFills = (colorAndFill: ButtonColorAndFillTuple) => {
+      const klass = this._createColorAndFillClass(colorAndFill);
+      this.renderer.addClass(this.elementRef.nativeElement, klass);
+    }
+
+    const isEmpty = <T extends any[]>(tuple: T | []): tuple is [] => tuple.length === 0
+
+    combineLatest([
+      this.color$,
+      this.fill$
+    ])
+    .pipe(
+      startWith([] as []),
+      pairwise(),
+      tap(([previous, _]) => !isEmpty(previous) && removeColorAndFill(previous)),
+      map(([_, current]) => !isEmpty(current) && current)
+    )
+    .subscribe(colorAndFill => addColorAndFills(colorAndFill))
+  }
+
+  private _createColorAndFillClass(colorAndFill: ButtonColorAndFillTuple) {
+
+    const [color, fill] = colorAndFill;
+    return ['btn', fill === 'outline' ? fill : '', color].filter(x => !!x).join('-');
+  }
 }
 
 @Directive({
