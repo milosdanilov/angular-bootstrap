@@ -5,3 +5,5 @@ export type ButtonFillType = 'solid' | 'outline';
 export type ButtonColorAndFillTuple = [ButtonColor, ButtonFillType];
 
 export type ButtonSize = 'sm' | 'lg' | 'default';
+
+export type ButtonExpandType = 'block' | 'default';
