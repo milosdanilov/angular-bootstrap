@@ -9,7 +9,8 @@ import { ButtonColor, ButtonColorAndFillTuple, ButtonExpandType, ButtonFillType,
   selector: 'button[bsButton], input[bsButton]',
   exportAs: 'bsButton',
   host: {
-    'class': 'btn'
+    'class': 'btn',
+    '[attr.disabled]': '_disabled || null'
   }
 })
 export class ButtonDirective implements OnInit {
@@ -19,6 +20,8 @@ export class ButtonDirective implements OnInit {
 
   private _size: ButtonSize;
   private _expand: ButtonExpandType;
+
+  protected _disabled = false;
 
   constructor(
     private elementRef: ElementRef,
@@ -51,6 +54,11 @@ export class ButtonDirective implements OnInit {
   @Input()
   set expand (value: ButtonExpandType) {
     this._setExpand(value);
+  }
+
+  @Input()
+  set disabled (value: boolean) {
+    this._disabled = value != null;
   }
 
   ngOnInit(): void {
@@ -112,6 +120,8 @@ export class ButtonDirective implements OnInit {
     if (expand === 'block') {
       this.renderer.addClass(this.elementRef.nativeElement, 'btn-block');
     }
+
+    this._expand = expand;
   }
 }
 
@@ -119,7 +129,10 @@ export class ButtonDirective implements OnInit {
   selector: 'a[bsButton]',
   exportAs: 'bsButton',
   host: {
-    'role': 'button'
+    'role': 'button',
+    '[class.disabled]': '_disabled',
+    '[attr.tabindex]': '_disabled ? -1 : 0',
+    '[attr.aria-disabled]': '_disabled.toString()'
   }
 })
 export class AnchorButtonDirective extends ButtonDirective { }
