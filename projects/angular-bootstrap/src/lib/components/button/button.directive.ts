@@ -1,9 +1,10 @@
-import { Directive, ElementRef, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
 
 import { BehaviorSubject, combineLatest, ReplaySubject } from 'rxjs';
 import { map, pairwise, startWith, tap } from 'rxjs/operators';
 
 import { ButtonColor, ButtonColorAndFillTuple, ButtonExpandType, ButtonFillType, ButtonSize } from './button';
+import { CanToggle, CanToggleCtor, mixinToggled } from './button.mixins';
 
 @Directive({
   selector: 'button[bsButton], input[bsButton]',
@@ -137,47 +138,31 @@ export class ButtonDirective implements OnInit {
 })
 export class AnchorButtonDirective extends ButtonDirective { }
 
+const _ButtonToggleBase: CanToggleCtor & typeof ButtonDirective = mixinToggled(ButtonDirective);
+
 @Directive({
   selector: 'button[bsToggleButton], input[bsToggleButton]',
   exportAs: 'bsToggleButton',
   host: {
     'autocomplete': 'off',
-    '[class.active]': '_checked',
-    '[attr.aria-pressed]': '_checked.toString()',
-  }
+    '[class.active]': 'toggled',
+    '[attr.aria-pressed]': 'toggled.toString()',
+    '(click)': 'onToggle()',
+  },
+  inputs: ['toggled']
 })
-export class ButtonToggleDirective extends ButtonDirective {
-  private _checked = false;
+export class ButtonToggleDirective extends _ButtonToggleBase implements CanToggle { }
 
-  @Input()
-  set checked(value: boolean) {
-    this._checked = value != null;
-  }
-
-  @HostListener('click')
-  onClick() {
-    this._checked = !this._checked;
-  }
-}
+const _AnchorToggleBase: CanToggleCtor & typeof AnchorButtonDirective = mixinToggled(AnchorButtonDirective);
 
 @Directive({
   selector: 'a[bsToggleButton]',
   exportAs: 'bsToggleButton',
   host: {
-    '[class.active]': '_checked',
-    '[attr.aria-pressed]': '_checked.toString()',
-  }
+    '[class.active]': 'toggled',
+    '[attr.aria-pressed]': 'toggled.toString()',
+    '(click)': 'onToggle()',
+  },
+  inputs: ['toggled']
 })
-export class AnchorButtonToggleDirective extends AnchorButtonDirective {
-  private _checked = false;
-
-  @Input()
-  set checked(value: boolean) {
-    this._checked = value != null;
-  }
-
-  @HostListener('click')
-  onClick() {
-    this._checked = !this._checked;
-  }
-}
+export class AnchorButtonToggleDirective extends _AnchorToggleBase implements CanToggle { }
