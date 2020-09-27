@@ -52,12 +52,12 @@ export class ButtonDirective implements OnInit {
   }
 
   @Input()
-  set expand (value: ButtonExpandType) {
+  set expand(value: ButtonExpandType) {
     this._setExpand(value);
   }
 
   @Input()
-  set disabled (value: boolean) {
+  set disabled(value: boolean) {
     this._disabled = value != null;
   }
 
