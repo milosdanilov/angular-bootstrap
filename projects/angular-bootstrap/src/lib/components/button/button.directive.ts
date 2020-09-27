@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
 
 import { BehaviorSubject, combineLatest, ReplaySubject } from 'rxjs';
 import { map, pairwise, startWith, tap } from 'rxjs/operators';
@@ -136,3 +136,48 @@ export class ButtonDirective implements OnInit {
   }
 })
 export class AnchorButtonDirective extends ButtonDirective { }
+
+@Directive({
+  selector: 'button[bsToggleButton], input[bsToggleButton]',
+  exportAs: 'bsToggleButton',
+  host: {
+    'autocomplete': 'off',
+    '[class.active]': '_checked',
+    '[attr.aria-pressed]': '_checked.toString()',
+  }
+})
+export class ButtonToggleDirective extends ButtonDirective {
+  private _checked = false;
+
+  @Input()
+  set checked(value: boolean) {
+    this._checked = value != null;
+  }
+
+  @HostListener('click')
+  onClick() {
+    this._checked = !this._checked;
+  }
+}
+
+@Directive({
+  selector: 'a[bsToggleButton]',
+  exportAs: 'bsToggleButton',
+  host: {
+    '[class.active]': '_checked',
+    '[attr.aria-pressed]': '_checked.toString()',
+  }
+})
+export class AnchorButtonToggleDirective extends AnchorButtonDirective {
+  private _checked = false;
+
+  @Input()
+  set checked(value: boolean) {
+    this._checked = value != null;
+  }
+
+  @HostListener('click')
+  onClick() {
+    this._checked = !this._checked;
+  }
+}
